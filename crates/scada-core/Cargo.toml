@@ -1,0 +1,11 @@
+[package]
+name        = "scada-core"
+version     = "0.1.0"
+edition     = "2021"
+description = "Core types and traits for the scada-rs project"
+license     = "MIT"
+
+[dependencies]
+thiserror = { workspace = true }
+serde     = { workspace = true }
+tracing   = { workspace = true }
