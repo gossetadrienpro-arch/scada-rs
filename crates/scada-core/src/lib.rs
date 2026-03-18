@@ -1,14 +1,24 @@
+use thiserror::Error;
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum RegisterValue {
     Bool(bool),
     UInt16(u16),
     Float32(f32),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum ScadaError {
+    #[error("Connexion échouée vers {host} : {reason}")]
     ConnectionFailed { host: String, reason: String },
+
+    #[error("Adresse invalide : {0}")]
     InvalidAddress(u16),
+
+    #[error("Timeout après {timeout_ms}ms")]
     Timeout { timeout_ms: u64 },
+
+    #[error("Trame malformée : {0}")]
     ParseError(String),
 }
 
@@ -39,7 +49,6 @@ mod tests {
     use super::*;
 
     #[test]
-
     fn tag_starts_unacquired() {
         let tag = Tag::new(1, "Température");
         assert!(!tag.is_acquired());
@@ -48,7 +57,7 @@ mod tests {
     #[test]
     fn tag_acquired_after_value_set() {
         let mut tag = Tag::new(2, "Pression");
-        tag.value = Some(RegisterValue::Float32(5.45)); 
-        assert!(tag.is_acquired()); 
+        tag.value = Some(RegisterValue::Float32(5.45));
+        assert!(tag.is_acquired());
     }
 }

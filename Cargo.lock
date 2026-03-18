@@ -178,6 +178,7 @@ dependencies = [
  "scada-core",
  "simulator",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

@@ -7,18 +7,24 @@ pub async fn run(addr: &str) {
     let listener = TcpListener::bind(addr).await.unwrap();
     println!("Serveur SCADA en écoute sur {}", addr);
 
-    loop{
+    loop {
         let (mut socket, addr) = listener.accept().await.unwrap();
         println!("Nouvelle connexion : {}", addr);
 
-        let mut buf = [0u8; 256];           // buffer de 256 octets
-        let n = socket.read(&mut buf).await.unwrap();  // lit les octets, retourne le nombre lu
+        let mut buf = [0u8; 256];
+        let n = socket.read(&mut buf).await.unwrap();
         println!("Reçu {} octets : {:?}", n, &buf[..n]);
 
-       let frame = parse_frame(&buf[..n]).unwrap();
-       let sim = PlcSimulator::new(1);
-       let result = sim.process_request(&frame);
-       println!("Valeur lue : {:?}", result);
+        let sim = PlcSimulator::new(1);  // ← doit être AVANT le match
 
+        match parse_frame(&buf[..n]) {
+            Ok(frame) => {
+                let result = sim.process_request(&frame);
+                println!("Valeur lue : {:?}", result);
+            }
+            Err(e) => {
+                println!("Trame invalide reçue : {} — connexion ignorée", e);
+            }
+        }
     }
 }

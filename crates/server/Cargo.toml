@@ -8,3 +8,4 @@ tokio      = { workspace = true }
 scada-core = { path = "../scada-core" }
 modbus     = { path = "../modbus" }
 simulator  = { path = "../simulator" }
+tracing = {workspace =  true}
