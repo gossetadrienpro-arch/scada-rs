@@ -85,6 +85,9 @@ version = "0.1.0"
 [[package]]
 name = "simulator"
 version = "0.1.0"
+dependencies = [
+ "scada-core",
+]
 
 [[package]]
 name = "syn"
