@@ -1,11 +1,13 @@
 [package]
 name = "server"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 tokio      = { workspace = true }
 scada-core = { path = "../scada-core" }
 modbus     = { path = "../modbus" }
 simulator  = { path = "../simulator" }
-tracing = {workspace =  true}
+axum       = "0.8.8"
+serde      = { workspace = true }
+serde_json = "1.0.149"
