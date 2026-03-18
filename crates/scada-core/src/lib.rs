@@ -4,10 +4,12 @@ pub enum RegisterValue {
     Float32(f32),
 }
 
+#[derive(Debug)]
 pub enum ScadaError {
     ConnectionFailed { host: String, reason: String },
     InvalidAddress(u16),
     Timeout { timeout_ms: u64 },
+    ParseError(String),
 }
 
 pub type ScadaResult<T> = Result<T, ScadaError>;
@@ -45,8 +47,8 @@ mod tests {
 
     #[test]
     fn tag_acquired_after_value_set() {
-        let mut tag = Tag::new(2, "Pression"); // étape 1 — à toi de remplir
-        tag.value = Some(RegisterValue::Float32(5.45)); // étape 2
-        assert!(tag.is_acquired()); // étape 3 — sans le ! cette fois, pourquoi ?
+        let mut tag = Tag::new(2, "Pression");
+        tag.value = Some(RegisterValue::Float32(5.45)); 
+        assert!(tag.is_acquired()); 
     }
 }

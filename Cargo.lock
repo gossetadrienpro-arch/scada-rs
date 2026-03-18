@@ -5,6 +5,9 @@ version = 4
 [[package]]
 name = "modbus"
 version = "0.1.0"
+dependencies = [
+ "scada-core",
+]
 
 [[package]]
 name = "once_cell"
