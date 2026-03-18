@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use scada_core::{ScadaError, ScadaResult};
 use modbus::{ModbusFrame};
+use rand::RngExt;
 
 pub struct PlcSimulator {
 
@@ -35,6 +36,21 @@ impl PlcSimulator{
 
     self.read_register(address)
 }
+
+    pub fn update_registers(&mut self) {
+        let mut rng = rand::rng();
+        let variation: i32 = rng.random_range(-10..=10);
+        
+        if let Some(val) = self.registers.get_mut(&40001) {
+            *val = ((*val as i32) + variation) as u16;
+        }
+        if let Some(val) = self.registers.get_mut(&40002) {
+            *val = ((*val as i32) + variation) as u16;
+        }
+        if let Some(val) = self.registers.get_mut(&40003) {
+            *val = ((*val as i32) + variation) as u16;
+        }
+    }
 
 }
 

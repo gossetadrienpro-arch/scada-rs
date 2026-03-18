@@ -8,6 +8,6 @@ tokio      = { workspace = true }
 scada-core = { path = "../scada-core" }
 modbus     = { path = "../modbus" }
 simulator  = { path = "../simulator" }
-axum       = "0.8.8"
 serde      = { workspace = true }
 serde_json = "1.0.149"
+axum = { version = "0.8.8", features = ["ws"] }

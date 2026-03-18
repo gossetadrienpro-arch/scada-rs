@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 scada-core = { path = "../scada-core" }
 modbus = {path = "../modbus"}
+rand = "0.10.0"

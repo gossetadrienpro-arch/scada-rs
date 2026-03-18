@@ -21,6 +21,7 @@ pub fn parse_frame(raw: &[u8]) -> ScadaResult<ModbusFrame>{
     let unit_id = raw[6] as u8;
     let function_code = raw[7] as u8;
     let data = raw[8..].to_vec();
+    
     Ok(ModbusFrame {transaction_id, protocol_id, length, unit_id, function_code, data})
 }
 
