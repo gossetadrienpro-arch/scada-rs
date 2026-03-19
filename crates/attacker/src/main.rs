@@ -7,6 +7,8 @@ async fn main() {
     let mut stream = TcpStream::connect("127.0.0.1:5020").await.unwrap();
     println!("Connecté au serveur SCADA !");
 
+    for i in  1..=3{
+
         let raw: &[u8] = &[
 
             0x00, 0x01, //transaction_id = 1
@@ -20,8 +22,12 @@ async fn main() {
 
         stream.write_all(raw).await.unwrap();
 
-        
-        println!("Trame 1 envoyée — lecture registre 40001");
+         println!("Replay {} envoyé", i);
+         tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+
+    }
+
+
 
         let raw2:&[u8] = &[
 
