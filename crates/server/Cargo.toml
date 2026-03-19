@@ -11,3 +11,5 @@ simulator  = { path = "../simulator" }
 serde      = { workspace = true }
 serde_json = "1.0.149"
 axum = { version = "0.8.8", features = ["ws"] }
+tracing = {workspace = true}
+tracing-subscriber = "0.3"

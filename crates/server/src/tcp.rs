@@ -2,19 +2,21 @@ use tokio::net::TcpListener;
 use tokio::io::AsyncReadExt;
 use modbus::parse_frame;
 use simulator::PlcSimulator;
+use tracing::{info, warn, debug};
 
 pub async fn run(addr: &str) {
     let listener = TcpListener::bind(addr).await.unwrap();
-    println!("Serveur SCADA en écoute sur {}", addr);
+    tracing::info!("Serveur SCADA en écoute sur {}", addr);
 
     loop {
         let (mut socket, addr) = listener.accept().await.unwrap();
-        println!("Nouvelle connexion : {}", addr);
+        info!("Nouvelle connexion : {}", addr);
 
         loop{
         let mut buf = [0u8; 256];
         let n = socket.read(&mut buf).await.unwrap();
-        println!("Reçu {} octets : {:?}", n, &buf[..n]);
+
+        debug!("Reçu {} octets : {:?}", n, &buf[..n]);
 
         let sim = PlcSimulator::new(1);
 
@@ -25,10 +27,11 @@ pub async fn run(addr: &str) {
                 match parse_frame(&buf[..n]) {
             Ok(frame) => {
                 let result = sim.process_request(&frame);
-                println!("Valeur lue : {:?}", result);
+
+                debug!("Valeur lue : {:?}", result);
             }
             Err(e) => {
-                println!("Trame invalide reçue : {} — connexion ignorée", e);
+                warn!("Trame invalide reçue : {} — connexion ignorée", e);
             }
         }
 
