@@ -1,0 +1,9 @@
+[package]
+name    = "attacker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio      = { workspace = true }
+modbus     = { path = "../modbus" }
+scada-core = { path = "../scada-core" }

@@ -11,13 +11,18 @@ pub async fn run(addr: &str) {
         let (mut socket, addr) = listener.accept().await.unwrap();
         println!("Nouvelle connexion : {}", addr);
 
+        loop{
         let mut buf = [0u8; 256];
         let n = socket.read(&mut buf).await.unwrap();
         println!("Reçu {} octets : {:?}", n, &buf[..n]);
 
-        let sim = PlcSimulator::new(1);  // ← doit être AVANT le match
+        let sim = PlcSimulator::new(1);
 
-        match parse_frame(&buf[..n]) {
+        if n == 0{
+            break;
+        } 
+
+                match parse_frame(&buf[..n]) {
             Ok(frame) => {
                 let result = sim.process_request(&frame);
                 println!("Valeur lue : {:?}", result);
@@ -25,6 +30,8 @@ pub async fn run(addr: &str) {
             Err(e) => {
                 println!("Trame invalide reçue : {} — connexion ignorée", e);
             }
+        }
+
         }
     }
 }
