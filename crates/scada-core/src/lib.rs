@@ -23,6 +23,9 @@ pub enum ScadaError {
 
     #[error("Trame malformée : {0}")]
     ParseError(String),
+
+    #[error("Function code non supporté : {0}")]
+    UnsupportedFunctionCode(u8),
 }
 
 pub type ScadaResult<T> = Result<T, ScadaError>;

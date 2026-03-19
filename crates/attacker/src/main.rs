@@ -1,6 +1,5 @@
 use tokio::{net::TcpStream};
 use tokio::io::AsyncWriteExt;
-use tokio::io::AsyncReadExt;
 
 
 #[tokio::main]
@@ -21,7 +20,7 @@ async fn main() {
 
         stream.write_all(raw).await.unwrap();
 
-        let mut buf = [0u8; 256];
+        
         println!("Trame 1 envoyée — lecture registre 40001");
 
         let raw2:&[u8] = &[

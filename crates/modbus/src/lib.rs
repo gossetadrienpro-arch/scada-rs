@@ -21,7 +21,7 @@ pub fn parse_frame(raw: &[u8]) -> ScadaResult<ModbusFrame>{
     let unit_id = raw[6] as u8;
     let function_code = raw[7] as u8;
     let data = raw[8..].to_vec();
-    
+
     Ok(ModbusFrame {transaction_id, protocol_id, length, unit_id, function_code, data})
 }
 
@@ -31,7 +31,7 @@ mod tests {
 
     #[test]
     fn parse_valid_frame() {
-        let mut raw: &[u8] = &[ 
+        let raw: &[u8] = &[ 
             0x00, 0x01,  // transaction_id = 1
             0x00, 0x00,  // protocol_id = 0
             0x00, 0x06,  // length = 6
@@ -46,8 +46,6 @@ mod tests {
         assert_eq!(frame.function_code, 3);
         assert_eq!(frame.unit_id, 1);
     }
-
-     #[test]
 
      #[test]
 fn parse_too_short() {

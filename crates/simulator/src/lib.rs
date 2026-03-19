@@ -32,6 +32,10 @@ impl PlcSimulator{
         return Err(ScadaError::ParseError("data trop court".to_string()));
     }
 
+    if frame.function_code != 3 {
+        return Err(ScadaError::UnsupportedFunctionCode(frame.function_code));
+    }
+
     let address = ((frame.data[0] as u16) << 8) | (frame.data[1] as u16);
 
     self.read_register(address)
