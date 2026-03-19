@@ -8,9 +8,12 @@ pub async fn run(addr: &str) {
     let listener = TcpListener::bind(addr).await.unwrap();
     tracing::info!("Serveur SCADA en écoute sur {}", addr);
 
+
     loop {
         let (mut socket, addr) = listener.accept().await.unwrap();
         info!("Nouvelle connexion : {}", addr);
+
+        let mut last_transaction_id: Option<u16> = None;
 
         loop{
         let mut buf = [0u8; 256];
@@ -28,6 +31,14 @@ pub async fn run(addr: &str) {
             Ok(frame) => {
                 let result = sim.process_request(&frame);
 
+                if let Some(last_id) = last_transaction_id {
+                    if last_id == frame.transaction_id {
+                        warn!("Possible replay détecté — Transaction ID {} déjà vu", frame.transaction_id);
+                    }
+                }
+
+                last_transaction_id = Some(frame.transaction_id);
+    
                 debug!("Valeur lue : {:?}", result);
             }
             Err(e) => {
