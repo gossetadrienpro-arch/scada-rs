@@ -1,16 +1,15 @@
 use scada_core::{ScadaError, ScadaResult};
 
 pub struct ModbusFrame {
-
     pub transaction_id: u16,
     pub protocol_id: u16,
-    pub length:u16,
-    pub unit_id:u8,
-    pub function_code:u8,
+    pub length: u16,
+    pub unit_id: u8,
+    pub function_code: u8,
     pub data: Vec<u8>,
 }
 
-pub fn parse_frame(raw: &[u8]) -> ScadaResult<ModbusFrame>{
+pub fn parse_frame(raw: &[u8]) -> ScadaResult<ModbusFrame> {
     if raw.len() < 7 {
         return Err(ScadaError::ParseError("trame trop courte".to_string()));
     }
@@ -22,7 +21,14 @@ pub fn parse_frame(raw: &[u8]) -> ScadaResult<ModbusFrame>{
     let function_code = raw[7];
     let data = raw[8..].to_vec();
 
-    Ok(ModbusFrame {transaction_id, protocol_id, length, unit_id, function_code, data})
+    Ok(ModbusFrame {
+        transaction_id,
+        protocol_id,
+        length,
+        unit_id,
+        function_code,
+        data,
+    })
 }
 
 #[cfg(test)]
@@ -31,14 +37,14 @@ mod tests {
 
     #[test]
     fn parse_valid_frame() {
-        let raw: &[u8] = &[ 
-            0x00, 0x01,  // transaction_id = 1
-            0x00, 0x00,  // protocol_id = 0
-            0x00, 0x06,  // length = 6
-            0x01,        // unit_id = 1
-            0x03,        // function_code = 3 (Read Holding Registers)
-            0x9C, 0x41,  // adresse registre 40001
-            0x00, 0x02,  // nombre de registres = 2
+        let raw: &[u8] = &[
+            0x00, 0x01, // transaction_id = 1
+            0x00, 0x00, // protocol_id = 0
+            0x00, 0x06, // length = 6
+            0x01, // unit_id = 1
+            0x03, // function_code = 3 (Read Holding Registers)
+            0x9C, 0x41, // adresse registre 40001
+            0x00, 0x02, // nombre de registres = 2
         ];
 
         let frame = parse_frame(raw).unwrap();
@@ -47,10 +53,10 @@ mod tests {
         assert_eq!(frame.unit_id, 1);
     }
 
-     #[test]
-fn parse_too_short() {
-    let raw: &[u8] = &[0x00, 0x01, 0x00, 0x00];
-    let result = parse_frame(raw);
-    assert!(result.is_err());
-}
+    #[test]
+    fn parse_too_short() {
+        let raw: &[u8] = &[0x00, 0x01, 0x00, 0x00];
+        let result = parse_frame(raw);
+        assert!(result.is_err());
+    }
 }

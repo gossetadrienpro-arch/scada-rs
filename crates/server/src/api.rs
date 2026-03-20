@@ -1,13 +1,12 @@
-use axum::{Router, routing::get, Json};
-use scada_core::Tag;
-use scada_core::RegisterValue;
-use simulator::PlcSimulator;
-use axum::extract::ws::WebSocketUpgrade;
-use axum::extract::ws::WebSocket;
 use axum::extract::ws::Message;
+use axum::extract::ws::WebSocket;
+use axum::extract::ws::WebSocketUpgrade;
+use axum::{routing::get, Json, Router};
+use scada_core::RegisterValue;
+use scada_core::Tag;
+use simulator::PlcSimulator;
 
 async fn get_tags() -> Json<Vec<Tag>> {
-
     let sim = PlcSimulator::new(1);
 
     let mut tags = Vec::new();
@@ -39,7 +38,7 @@ async fn handle_socket(mut socket: WebSocket) {
     loop {
         sim.update_registers();
 
-            let mut tags = Vec::new();
+        let mut tags = Vec::new();
         let mut tag1 = Tag::new(1, "Température", 40001);
         let mut tag2 = Tag::new(2, "Pression_1", 40002);
         let mut tag3 = Tag::new(3, "Pression_2", 40003);
@@ -59,7 +58,6 @@ async fn handle_socket(mut socket: WebSocket) {
         let json = serde_json::to_string(&tags).unwrap();
         socket.send(Message::Text(json.into())).await.unwrap();
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-
     }
 }
 

@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RegisterValue {
@@ -10,7 +9,7 @@ pub enum RegisterValue {
     Float32(f32),
 }
 
-#[derive(Debug, Error,)]
+#[derive(Debug, Error)]
 pub enum ScadaError {
     #[error("Connexion échouée vers {host} : {reason}")]
     ConnectionFailed { host: String, reason: String },
@@ -35,11 +34,11 @@ pub struct Tag {
     pub id: u32,
     pub name: String,
     pub value: Option<RegisterValue>,
-    pub address:u16,
+    pub address: u16,
 }
 
 impl Tag {
-    pub fn new(id: u32, name: &str, address:u16) -> Self {
+    pub fn new(id: u32, name: &str, address: u16) -> Self {
         Self {
             id,
             name: name.to_string(),
