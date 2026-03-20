@@ -1,5 +1,7 @@
 # scada-rs
 
+![CI](https://github.com/gossetadrienpro-arch/scada-rs/actions/workflows/ci.yml/badge.svg)
+
 Backend SCADA écrit en Rust simulant un environnement industriel (PLC) via Modbus TCP, avec une API temps réel et des démonstrations d’attaques de cybersécurité OT.
 
 ---
