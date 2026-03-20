@@ -3,15 +3,35 @@ use tokio::io::AsyncReadExt;
 use modbus::parse_frame;
 use simulator::PlcSimulator;
 use tracing::{info, warn, debug};
+use std::{collections::HashMap};
+
+
+
 
 pub async fn run(addr: &str) {
+    let mut connection_count = HashMap::new();
+
     let listener = TcpListener::bind(addr).await.unwrap();
     tracing::info!("Serveur SCADA en écoute sur {}", addr);
 
 
     loop {
-        let (mut socket, addr) = listener.accept().await.unwrap();
-        info!("Nouvelle connexion : {}", addr);
+
+        let (mut socket, client_addr) = listener.accept().await.unwrap();
+        info!("Nouvelle connexion : {}", client_addr);
+
+        let ip = client_addr.ip();
+
+        let count = {
+            let c = connection_count.entry(ip).or_insert(0);
+            *c +=1;
+            *c
+        };
+
+        if count > 5 {
+            warn!("Rate limit dépassé pour {} - connexion refusée", ip);
+            continue;
+        }
 
         let mut last_transaction_id: Option<u16> = None;
 
