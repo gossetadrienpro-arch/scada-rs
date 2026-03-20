@@ -30,7 +30,7 @@ async fn get_tags() -> Json<Vec<Tag>> {
 }
 
 async fn ws_handler(ws: WebSocketUpgrade) -> impl axum::response::IntoResponse {
-    ws.on_upgrade(|socket| handle_socket(socket))
+    ws.on_upgrade(handle_socket)
 }
 
 async fn handle_socket(mut socket: WebSocket) {
