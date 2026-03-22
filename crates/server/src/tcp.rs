@@ -1,7 +1,7 @@
-use modbus::parse_frame;
+use modbus::{parse_frame, build_response};
 use simulator::PlcSimulator;
 use std::collections::HashMap;
-use tokio::io::AsyncReadExt;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
 use tracing::{debug, info, warn};
 
@@ -58,6 +58,12 @@ pub async fn run(addr: &str) {
                     last_transaction_id = Some(frame.transaction_id);
 
                     debug!("Valeur lue : {:?}", result);
+
+                    if let Ok(value) = result {
+                        
+                        let response = build_response(&frame, value);
+                        socket.write_all(&response).await.unwrap();
+                    }
                 }
                 Err(e) => {
                     warn!("Trame invalide reçue : {} — connexion ignorée", e);

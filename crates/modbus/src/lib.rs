@@ -31,6 +31,34 @@ pub fn parse_frame(raw: &[u8]) -> ScadaResult<ModbusFrame> {
     })
 }
 
+
+pub fn build_response(frame:&ModbusFrame, value:u16) -> Vec<u8>{
+let mut response = Vec::new();
+
+response.push((frame.transaction_id >> 8) as u8); // octet fort
+response.push((frame.transaction_id &0xFF) as u8); // octet faible
+
+response.push((frame.protocol_id >>8) as u8);
+response.push((frame.protocol_id &0xFF) as u8);
+
+response.push(0x00); // octet fort
+response.push(0x05); // length octet faible — 5 octets suivent
+
+response.push(frame.unit_id); // déjà u8
+
+response.push(frame.function_code); // déjà u8
+
+response.push(0x02); // nombre d'octets de données qui suivent (1 rgst = 2 oct)
+
+response.push((value >> 8) as u8);
+response.push((value &0xFF) as u8);
+
+response
+
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
